@@ -5,6 +5,8 @@ import React from "react";
  * DashboardScreen provides a daily summary of calories, macros, water, and progress visuals.
  * Uses mock data and visually modern cards, charts, and progress bars.
  */
+import { FireIcon } from "./icons";
+
 export function DashboardScreen() {
   // Mock: daily intake/goals
   const dailyGoals = {
@@ -23,6 +25,10 @@ export function DashboardScreen() {
     fiber: 22,
     water: 1450,
   };
+
+  // Streak visual (mock)
+  const streakCount = 4; // Place-holder: 4-day streak!
+  const longestStreak = 6; // Place-holder (for completeness)
 
   const items = [
     {
@@ -114,13 +120,33 @@ export function DashboardScreen() {
   // Responsive: grid 2 on mobile, 3 on sm+
   return (
     <section
-      className="p-4 bg-[#f6f7fa] min-h-[93vh] flex flex-col"
+      className="p-4 bg-[#f6f7fa] dark:bg-[#131e2b] min-h-[93vh] flex flex-col"
       data-testid="dashboard-section"
       aria-labelledby="dashboard-header"
     >
+      {/* Streak row */}
+      <div
+        className="flex items-center gap-2 mb-3 self-center aria-live"
+        role="status"
+        aria-label="streak-badge"
+        data-testid="streak-tracker"
+      >
+        <span
+          className="w-7 h-7 rounded-full bg-[#ffe3b3] dark:bg-[#27301a] flex items-center justify-center"
+          title="Current streak"
+          aria-hidden="true"
+        >
+          <FireIcon />
+        </span>
+        <span className="text-[16px] font-bold text-[#f59e42] dark:text-[#ffc362]" data-testid="streak-label">
+          {streakCount} day streak
+        </span>
+        <span className="sr-only">Streak tracker showing a {streakCount} day log streak</span>
+        <span className="text-xs text-gray-400 ml-2">(Longest: {longestStreak})</span>
+      </div>
       <h2
         id="dashboard-header"
-        className="mb-1 text-lg font-semibold text-[#22c55e] leading-tight tracking-tight"
+        className="mb-1 text-lg font-semibold text-[#22c55e] dark:text-[#70ee94] leading-tight tracking-tight"
         data-testid="dashboard-title"
       >
         Today's Nutrition Summary
