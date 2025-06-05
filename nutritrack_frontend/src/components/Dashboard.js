@@ -1,21 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../AppContext";
 
 /**
  * PUBLIC_INTERFACE
- * Dashboard component for NutriTrack.
- * Shows daily nutritional summary, water intake, and visual progress indicators with mock data.
- * Mobile-first and styled using Tailwind and NutriTrack colors.
+ * Dashboard component for NutriTrack, now powered by AppContext for live nutrition.
  */
 function Dashboard() {
-  // Mock data for daily summary
-  const summary = {
-    calories: { current: 1520, goal: 2000 },
-    protein: { current: 90, goal: 120 }, // grams
-    carbs: { current: 180, goal: 230 },
-    fat: { current: 50, goal: 70 },
-    fiber: { current: 21, goal: 30 },
-    water: { current: 1200, goal: 2000 }, // ml
-  };
+  const { summary } = useContext(AppContext);
 
   // Progress calculation (0-100)
   const progress = (current, goal) =>
