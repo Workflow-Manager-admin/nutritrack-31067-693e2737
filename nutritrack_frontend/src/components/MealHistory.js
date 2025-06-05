@@ -1,59 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../AppContext";
 
 /**
  * PUBLIC_INTERFACE
  * MealHistory component for NutriTrack.
- * Shows a scrollable, styled list of logged meals with images, dates, macros, and tooltips.
- * Uses mock data for demonstration.
+ * Shows list of logged meals from AppContext state.
  */
 function MealHistory() {
-  // Mock meal entries
-  const [meals] = useState([
-    {
-      id: 1,
-      date: "2024-06-01",
-      time: "08:15",
-      dish: "Oatmeal & Berries",
-      photo:
-        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&q=80",
-      quantity: "1 bowl (200g)",
-      macros: { protein: 8, carbs: 34, fat: 4, fiber: 6 },
-      calories: 190,
-    },
-    {
-      id: 2,
-      date: "2024-06-01",
-      time: "12:35",
-      dish: "Grilled Chicken Salad",
-      photo:
-        "https://images.unsplash.com/photo-1458642849426-cfb724f15ef7?auto=format&fit=crop&w=80&q=80",
-      quantity: "1 plate",
-      macros: { protein: 32, carbs: 10, fat: 6, fiber: 4 },
-      calories: 285,
-    },
-    {
-      id: 3,
-      date: "2024-06-01",
-      time: "19:00",
-      dish: "Salmon with Veggies",
-      photo:
-        "https://images.unsplash.com/photo-1514512364185-4c2b678ad623?auto=format&fit=crop&w=80&q=80",
-      quantity: "250g serving",
-      macros: { protein: 34, carbs: 14, fat: 13, fiber: 3 },
-      calories: 345,
-    },
-    {
-      id: 4,
-      date: "2024-05-31",
-      time: "18:45",
-      dish: "Veggie Stir Fry",
-      photo:
-        "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=80&q=80",
-      quantity: "1 bowl",
-      macros: { protein: 12, carbs: 28, fat: 10, fiber: 6 },
-      calories: 220,
-    },
-  ]);
+  const { meals } = useContext(AppContext);
   const [macroTip, setMacroTip] = useState(null);
 
   return (
