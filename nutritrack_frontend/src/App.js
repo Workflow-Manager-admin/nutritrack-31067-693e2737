@@ -1,27 +1,31 @@
 import React from 'react';
 import './App.css';
+import NavBar from './NavBar';
 
 /**
  * PUBLIC_INTERFACE
  * Main container component for NutriTrack.
  * Sets up responsive app shell using Tailwind for layout and theming.
- * Reserves areas for navigation (top, bottom/mobile) and main dynamic content.
+ * Navigation is handled via the NavBar component: mobile bottom nav & desktop tab nav.
  * Does not implement routing or feature logic yet.
  */
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-accent text-primary font-sans">
-      {/* Header Navigation Placeholder */}
+      {/* Header Navigation */}
       <header className="w-full px-4 py-3 shadow-sm bg-white flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="inline-block text-2xl font-black text-primary">*</span>
           <span className="font-bold tracking-tight text-secondary text-xl">NutriTrack</span>
         </div>
-        {/* Reserved for profile/icon/nav actions if needed */}
+        {/* Reserved for profile/icon/nav actions */}
         <div className="flex items-center space-x-2">
           {/* Navigation actions, avatar, etc. */}
         </div>
       </header>
+
+      {/* Desktop Tabs Navigation */}
+      <NavBar />
 
       {/* Main Content */}
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-6">
@@ -35,16 +39,7 @@ function App() {
         </div>
       </main>
 
-      {/* Mobile-First Bottom Navigation Placeholder */}
-      <footer className="w-full py-2 px-2 bg-white border-t shadow-inner fixed bottom-0 left-0 right-0 md:static md:shadow-none md:border-0 flex md:hidden justify-around z-40">
-        {/* Bottom nav icons/buttons will be inserted here in future */}
-        <span className="h-10 w-10 bg-primary rounded-full opacity-20" />
-        <span className="h-10 w-10 bg-secondary rounded-full opacity-20" />
-        <span className="h-10 w-10 bg-primary rounded-full opacity-20" />
-        <span className="h-10 w-10 bg-secondary rounded-full opacity-20" />
-        <span className="h-10 w-10 bg-primary rounded-full opacity-20" />
-      </footer>
-      {/* For desktop, main navigation will eventually move to header/sidebar */}
+      {/* Bottom navigation for mobile is handled by NavBar and spacer */}
     </div>
   );
 }
