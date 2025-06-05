@@ -1,44 +1,207 @@
 import React from "react";
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * DashboardScreen provides a daily summary of calories, macros, water, and progress visuals.
+ * Uses mock data and visually modern cards, charts, and progress bars.
+ */
 export function DashboardScreen() {
-  // Mock summary data
-  const dailyGoals = { calories: 2000, protein: 100, carbs: 250, fat: 70, fiber: 30, water: 2000 };
-  const actual = { calories: 1600, protein: 90, carbs: 180, fat: 50, fiber: 18, water: 1400 };
-  // Simple progress calculations for bars
-  const pct = (val, goal) => Math.min(100, Math.round((val / goal) * 100));
+  // Mock: daily intake/goals
+  const dailyGoals = {
+    calories: 2000,
+    protein: 120,
+    carbs: 250,
+    fat: 70,
+    fiber: 30,
+    water: 2000, // ml
+  };
+  const actual = {
+    calories: 1650,
+    protein: 95,
+    carbs: 180,
+    fat: 51,
+    fiber: 22,
+    water: 1450,
+  };
 
+  const items = [
+    {
+      title: "Calories",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#ff9f43]" fill="none">
+          <circle cx="13" cy="13" r="12" stroke="#ff9f43" strokeWidth="2" fill="#fffceb"/>
+          <path d="M13 7v6l4 2" stroke="#ff9f43" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        </svg>
+      ),
+      actual: actual.calories,
+      goal: dailyGoals.calories,
+      color: "#22c55e"
+    },
+    {
+      title: "Protein",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#3b82f6]" fill="none">
+          <circle cx="13" cy="13" r="12" stroke="#3b82f6" strokeWidth="2" fill="#f0f9ff"/>
+          <path d="M10 18s0-7 3-10c1-1 3-1 4 0 1 2-3 5-3 10" stroke="#3b82f6" strokeWidth="1.3" fill="none"/>
+        </svg>
+      ),
+      actual: actual.protein,
+      goal: dailyGoals.protein,
+      color: "#3b82f6"
+    },
+    {
+      title: "Carbs",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#a3e635]" fill="none">
+          <circle cx="13" cy="13" r="12" stroke="#a3e635" strokeWidth="2" fill="#f8fde5"/>
+          <rect x="8" y="8" width="10" height="10" rx="3" fill="#a3e635" fillOpacity={0.15} stroke="#a3e635" strokeWidth="1"/>
+        </svg>
+      ),
+      actual: actual.carbs,
+      goal: dailyGoals.carbs,
+      color: "#a3e635"
+    },
+    {
+      title: "Fat",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#f59e42]" fill="none">
+          <ellipse cx="13" cy="13" rx="11" ry="7" stroke="#f59e42" strokeWidth="2" fill="#fff7ec"/>
+          <ellipse cx="13" cy="13" rx="5" ry="3" fill="#f59e42" fillOpacity={0.12}/>
+        </svg>
+      ),
+      actual: actual.fat,
+      goal: dailyGoals.fat,
+      color: "#f59e42"
+    },
+    {
+      title: "Fiber",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#6ee7b7]" fill="none">
+          <rect x="3" y="7" width="20" height="12" rx="6" stroke="#6ee7b7" strokeWidth="2" fill="#edfcf9"/>
+          <rect x="8" y="10" width="5" height="6" rx="3" fill="#6ee7b7" fillOpacity={0.12}/>
+        </svg>
+      ),
+      actual: actual.fiber,
+      goal: dailyGoals.fiber,
+      color: "#6ee7b7"
+    },
+    {
+      title: "Water",
+      icon: (
+        <svg viewBox="0 0 26 26" className="w-6 h-6 text-[#38bdf8]" fill="none">
+          <ellipse cx="13" cy="16" rx="9" ry="6" stroke="#38bdf8" strokeWidth="2" fill="#e0f2fe"/>
+          <path d="M13 4c0 4-4 9-4 12 0 3.3 7.75 3.4 8 0 .21-2.8-4-8-4-12z" fill="#38bdf8" fillOpacity={0.13} stroke="#38bdf8" strokeWidth="1"/>
+        </svg>
+      ),
+      actual: actual.water,
+      goal: dailyGoals.water,
+      color: "#38bdf8"
+    },
+  ];
+
+  // Compute percentage (<100 capped at 100%)
+  function getPct(actualVal, goalVal) {
+    return Math.min(100, Math.round((actualVal / goalVal) * 100));
+  }
+
+  // Format title suffix
+  function unitSuffix(title) {
+    if (title === "Water") return "ml";
+    if (title === "Calories") return "kcal";
+    return "g";
+  }
+
+  // Responsive: grid 2 on mobile, 3 on sm+
   return (
-    <section className="p-4">
-      <div className="mb-2 text-lg font-semibold text-[#22c55e]">Today's Summary</div>
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        {/* Summary cards */}
-        {[
-          ["Calories", actual.calories, dailyGoals.calories, "#22c55e"],
-          ["Protein (g)", actual.protein, dailyGoals.protein, "#3b82f6"],
-          ["Carbs (g)", actual.carbs, dailyGoals.carbs, "#a3e635"],
-          ["Fat (g)", actual.fat, dailyGoals.fat, "#f59e42"],
-          ["Fiber (g)", actual.fiber, dailyGoals.fiber, "#6ee7b7"],
-          ["Water (ml)", actual.water, dailyGoals.water, "#38bdf8"],
-        ].map(([k, actualVal, goalVal, color]) => (
-          <div key={k}
-               className="bg-white border rounded-lg p-3 shadow text-gray-700 flex flex-col justify-between min-h-[90px]">
-            <div className="flex justify-between pb-1">
-              <span className="font-medium">{k}</span>
-              <span className={`font-bold`} style={{ color }}>{actualVal}/{goalVal}</span>
+    <section className="p-4 bg-[#f6f7fa] min-h-[93vh] flex flex-col">
+      <h2 className="mb-1 text-lg font-semibold text-[#22c55e] leading-tight tracking-tight">Today's Nutrition Summary</h2>
+      {/* Overall Calories Progress (big card) */}
+      <div className="bg-white rounded-xl border shadow-md mb-4 p-4 flex items-center gap-4">
+        <div className="flex-shrink-0">{items[0].icon}</div>
+        <div className="flex-1">
+          <div className="flex justify-between text-sm mb-1 font-medium text-gray-700">
+            <span>Calories</span>
+            <span className="font-bold text-[#22c55e]">{actual.calories} / {dailyGoals.calories} kcal</span>
+          </div>
+          {/* Progress Bar */}
+          <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-1">
+            <div
+              className="absolute h-3 left-0 top-0 rounded-full transition-all duration-300"
+              style={{ width: `${getPct(actual.calories, dailyGoals.calories)}%`, background: items[0].color }}
+            />
+          </div>
+          <div className="text-xs font-medium text-gray-400">
+            {getPct(actual.calories, dailyGoals.calories)}% of your daily goal
+          </div>
+        </div>
+      </div>
+
+      {/* Macro progress cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+        {items.slice(1).map((item, i) => (
+          <div key={item.title}
+            className="bg-white border rounded-lg p-3 shadow flex flex-col min-h-[98px] justify-between">
+            <div className="flex justify-between items-center pb-1">
+              <span className="font-medium flex items-center gap-1">{item.icon}<span>{item.title}</span></span>
+              <span className="font-bold" style={{ color: item.color }}>
+                {item.actual}/{item.goal} {unitSuffix(item.title)}
+              </span>
             </div>
             <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden mb-1 mt-1">
-              <div style={{
-                width: `${pct(actualVal, goalVal)}%`,
-                background: color,
-              }} className="absolute h-2 left-0 top-0 rounded-full transition-all duration-300"
+              <div
+                style={{
+                  width: `${getPct(item.actual, item.goal)}%`,
+                  background: item.color
+                }}
+                className="absolute h-2 left-0 top-0 rounded-full transition-all duration-300"
               />
             </div>
-            <span className="text-xs text-gray-400">Goal progress: {pct(actualVal, goalVal)}%</span>
+            <span className="text-xs text-gray-400">
+              {getPct(item.actual, item.goal)}% goal
+            </span>
           </div>
         ))}
       </div>
-      <div className="text-sm text-gray-500 mb-1">Visual feedback and more charts coming soon.</div>
+
+      {/* Water visual (simple circular chart style) */}
+      <div className="flex items-center justify-between gap-4 mb-1 bg-white border rounded-xl shadow p-3">
+        <div className="flex items-center gap-2">
+          <svg viewBox="0 0 34 34" className="w-10 h-10" fill="none">
+            <circle
+              cx="17"
+              cy="17"
+              r="15"
+              stroke="#dbeafe"
+              strokeWidth={4}
+              fill="#f0f9ff"
+            />
+            <circle
+              cx="17"
+              cy="17"
+              r="15"
+              stroke="#38bdf8"
+              strokeWidth={4}
+              strokeDasharray={94}
+              strokeDashoffset={94 - (94 * getPct(actual.water, dailyGoals.water) / 100)}
+              fill="none"
+              transform="rotate(-90 17 17)"
+            />
+            {/* Simple drop icon */}
+            <path d="M17 9C17 9 12 15.04 12 20a5 5 0 0 0 10 0c0-4.96-5-11-5-11z"
+                  stroke="#38bdf8" strokeWidth={1.5} fill="#e0f2fe" />
+          </svg>
+          <div>
+            <div className="text-md font-bold text-[#38bdf8]">{actual.water}/{dailyGoals.water} ml</div>
+            <div className="text-xs text-gray-500">Water Intake</div>
+          </div>
+        </div>
+        <div className="text-xs text-gray-400 font-medium">
+          {getPct(actual.water, dailyGoals.water)}% goal
+        </div>
+      </div>
+      <div className="mt-2 text-xs text-gray-400 text-center">
+        Data is mock. Icons are placeholders. Visual feedback will be enhanced over time.
+      </div>
     </section>
   );
 }
