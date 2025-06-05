@@ -493,8 +493,18 @@ export function UserProfileScreen() {
   }
 
   return (
-    <section className="px-2 pb-20 pt-6 max-w-md mx-auto w-full flex flex-col gap-5 bg-[#f6f7fa] min-h-[93vh]">
-      <div className="text-lg sm:text-xl font-bold tracking-tight text-[#22c55e] mb-2 text-center">User Profile</div>
+    <section
+      className="px-2 pb-20 pt-6 max-w-md mx-auto w-full flex flex-col gap-5 bg-[#f6f7fa] min-h-[93vh]"
+      data-testid="profile-section"
+      aria-labelledby="profile-header"
+    >
+      <div
+        className="text-lg sm:text-xl font-bold tracking-tight text-[#22c55e] mb-2 text-center"
+        id="profile-header"
+        data-testid="profile-title"
+      >
+        User Profile
+      </div>
       {/* Responsive two-column on desktop, single on mobile */}
       <div className="flex flex-col md:flex-row gap-5">
         {/* Profile Form */}
@@ -502,6 +512,9 @@ export function UserProfileScreen() {
           className="flex-1 bg-white shadow border rounded-xl p-4 flex flex-col gap-3"
           onSubmit={handleSubmit}
           autoComplete="off"
+          role="form"
+          aria-label="User Profile Form"
+          data-testid="profile-form"
         >
           {/* Age, Gender, Height, Weight */}
           <div className="flex flex-col gap-2 sm:gap-3">
