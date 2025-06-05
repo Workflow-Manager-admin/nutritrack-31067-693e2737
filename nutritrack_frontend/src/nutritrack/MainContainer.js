@@ -65,7 +65,31 @@ const DISABLED_FEATURES = [
 export default function MainContainer() {
   // Manage active tab
   const [active, setActive] = useState("dashboard");
-  // Show add meal/water as modal on mobile? Optional, handled as route/tab here
+
+  // Dark mode state
+  const [theme, setTheme] = useState(
+    () =>
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+  );
+  // Reminders modal state
+  const [showReminder, setShowReminder] = useState(false);
+
+  // Toggle theme and persist for session
+  function toggleTheme() {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }
+
+  // Set dark/light mode on <body>
+  React.useEffect(() => {
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [theme]);
 
   function renderScreen() {
     switch (active) {
@@ -86,12 +110,17 @@ export default function MainContainer() {
 
   return (
     <div
-      className="min-h-screen flex flex-col bg-[#ffffff]"
+      className={`min-h-screen flex flex-col ${
+        theme === "dark" ? "dark bg-[#0c1821]" : "bg-[#ffffff]"
+      }`}
       data-testid="main-container"
+      data-theme={theme}
     >
       {/* Header/Brand */}
       <header
-        className="flex justify-center items-center py-4 border-b bg-white shadow-sm fixed top-0 w-full z-10"
+        className={`flex justify-between items-center py-4 border-b shadow-sm fixed top-0 w-full z-10 ${
+          theme === "dark" ? "bg-[#10213f] border-[#234]" : "bg-white"
+        }`}
         data-testid="navbar-header"
         role="banner"
         aria-label="App Navigation Bar"
@@ -108,7 +137,80 @@ export default function MainContainer() {
           />
           NutriTrack
         </span>
+        <div className="flex items-center gap-2 mr-2">
+          {/* Reminders button */}
+          <button
+            aria-label="Reminders"
+            data-testid="reminder-btn"
+            className={`px-2 py-2 rounded hover:bg-[#ecfdf5] dark:hover:bg-[#233]`}
+            onClick={() => setShowReminder(true)}
+            type="button"
+            title="Show reminders"
+          >
+            <span className="w-6 h-6" aria-hidden="true">
+              <BellIcon />
+            </span>
+          </button>
+          {/* Dark mode toggle */}
+          <button
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            data-testid="darkmode-btn"
+            className={`px-2 py-2 rounded hover:bg-[#e0f2fe] dark:hover:bg-[#22344a]`}
+            onClick={toggleTheme}
+            type="button"
+            title="Toggle dark mode"
+          >
+            <span className="w-6 h-6" aria-hidden="true">
+              <MoonIcon />
+            </span>
+          </button>
+        </div>
       </header>
+      {/* Reminders Mock Modal */}
+      {showReminder && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Reminders Modal"
+          data-testid="reminder-modal"
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 p-2"
+        >
+          <div
+            className={`bg-white dark:bg-[#252d39] rounded-2xl shadow-lg border w-full max-w-xs md:max-w-sm p-6 flex flex-col items-center`}
+          >
+            <span
+              className="mb-3 w-9 h-9 text-[#f59e42] dark:text-[#ffc362]"
+              aria-hidden="true"
+              data-testid="reminder-modal-icon"
+            >
+              <BellIcon />
+            </span>
+            <div
+              className="text-lg font-semibold mb-2 text-[#3b82f6] dark:text-[#79b2f9]"
+              data-testid="reminder-modal-title"
+            >
+              Set Reminders (Demo)
+            </div>
+            <div
+              className="mb-3 text-sm text-gray-700 dark:text-gray-100"
+              data-testid="reminder-modal-body"
+            >
+              Remind yourself to drink water, log meals, or celebrate streaks!<br />
+              <span className="text-xs text-gray-400">(This is a mockup. Real reminders coming soon!)</span>
+            </div>
+            <button
+              className="mt-2 px-5 py-2 bg-[#22c55e] dark:bg-[#17914f] text-white rounded font-bold tracking-tight shadow"
+              aria-label="Close reminder modal"
+              data-testid="reminder-modal-close"
+              onClick={() => setShowReminder(false)}
+              autoFocus
+              type="button"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {/* Main content */}
       <main
         className="flex-1 pt-16 pb-20 sm:pb-0 max-w-md mx-auto w-full"
@@ -120,7 +222,9 @@ export default function MainContainer() {
       </main>
       {/* Bottom Navigation */}
       <nav
-        className="fixed bottom-0 left-0 right-0 w-full bg-[#f9fafb] border-t shadow-inner z-20 sm:max-w-md sm:mx-auto"
+        className={`fixed bottom-0 left-0 right-0 w-full border-t shadow-inner z-20 sm:max-w-md sm:mx-auto ${
+          theme === "dark" ? "bg-[#16243a]" : "bg-[#f9fafb]"
+        }`}
         role="navigation"
         aria-label="Primary bottom navigation"
         data-testid="bottom-nav"
@@ -130,7 +234,7 @@ export default function MainContainer() {
             <button
               key={item.screen}
               className={`flex-1 flex flex-col items-center justify-center text-sm px-1 focus:outline-none
-                ${active === item.screen ? "text-[#22c55e] font-bold" : "text-gray-500"}
+                ${active === item.screen ? "text-[#22c55e] font-bold" : (theme === "dark" ? "text-gray-300" : "text-gray-500")}
               `}
               onClick={() => setActive(item.screen)}
               aria-current={active === item.screen ? "true" : "false"}
@@ -138,6 +242,7 @@ export default function MainContainer() {
               aria-label={item.label}
               data-testid={`nav-btn-${item.screen}`}
               id={`nav-item-${item.screen}`}
+              type="button"
             >
               <span className="w-6 h-6 mb-1" aria-hidden="true">
                 {item.icon}
@@ -147,8 +252,6 @@ export default function MainContainer() {
           ))}
         </div>
       </nav>
-      {/* Disabled Features Stub (optionally visible in overflow menu or ignore for now) */}
-      {/* <div className="hidden">{DISABLED_FEATURES.map(...</div> */}
     </div>
   );
 }
