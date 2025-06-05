@@ -163,11 +163,22 @@ export function DashboardScreen() {
       {/* Macro progress cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
         {items.slice(1).map((item, i) => (
-          <div key={item.title}
-            className="bg-white border rounded-lg p-3 shadow flex flex-col min-h-[98px] justify-between">
+          <div
+            key={item.title}
+            className="bg-white border rounded-lg p-3 shadow flex flex-col min-h-[98px] justify-between"
+            data-testid={`macro-card-${item.title.toLowerCase()}`}
+            aria-label={`${item.title} goal card`}
+          >
             <div className="flex justify-between items-center pb-1">
-              <span className="font-medium flex items-center gap-1">{item.icon}<span>{item.title}</span></span>
-              <span className="font-bold" style={{ color: item.color }}>
+              <span className="font-medium flex items-center gap-1">
+                <span aria-hidden="true">{item.icon}</span>
+                <span>{item.title}</span>
+              </span>
+              <span
+                className="font-bold"
+                style={{ color: item.color }}
+                data-testid={`macro-value-${item.title.toLowerCase()}`}
+              >
                 {item.actual}/{item.goal} {unitSuffix(item.title)}
               </span>
             </div>
@@ -178,6 +189,11 @@ export function DashboardScreen() {
                   background: item.color
                 }}
                 className="absolute h-2 left-0 top-0 rounded-full transition-all duration-300"
+                aria-label={`${item.title} progress bar`}
+                role="progressbar"
+                aria-valuenow={getPct(item.actual, item.goal)}
+                aria-valuemax={100}
+                data-testid={`macro-bar-${item.title.toLowerCase()}`}
               />
             </div>
             <span className="text-xs text-gray-400">
