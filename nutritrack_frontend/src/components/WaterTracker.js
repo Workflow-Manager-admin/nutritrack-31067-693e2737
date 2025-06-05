@@ -133,7 +133,7 @@ function WaterTracker() {
             </button>
           </div>
           <div className="flex items-center text-blue-500 font-bold mt-1 text-sm">
-            {current} ml / {WATER_GOAL} ml
+            {water} ml / {WATER_GOAL} ml
           </div>
           {feedback && (
             <span className="text-xs text-green-600 mt-1">{feedback}</span>
