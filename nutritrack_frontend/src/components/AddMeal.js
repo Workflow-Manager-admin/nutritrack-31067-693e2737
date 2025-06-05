@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AppContext } from "../AppContext";
 
 /**
  * PUBLIC_INTERFACE
  * AddMeal component lets users log meals with photo, name, and macro details.
- * Includes mobile-first Tailwind styling, mock form handling, tooltips, and visual feedback.
+ * Now uses AppContext to add meals to global state.
  */
 function AddMeal() {
-  // Mock state for form and feedback
+  const { addMeal } = useContext(AppContext);
+
+  // Local state for input and feedback
   const [state, setState] = useState({
     dish: "",
     quantity: "",
@@ -21,20 +24,20 @@ function AddMeal() {
     error: "",
   });
 
-  // Handles mock form input
   function handleChange(e) {
     const { name, value, files } = e.target;
     if (name === "photo" && files.length) {
       setState((s) => ({
         ...s,
         photo: URL.createObjectURL(files[0]),
+        photoFile: files[0], // keep file for upload, here for future (not used)
       }));
     } else {
       setState((s) => ({ ...s, [name]: value }));
     }
   }
 
-  // Handles mock submit
+  // Handles form submit, calls global addMeal
   function handleSubmit(e) {
     e.preventDefault();
     setState((s) => ({
@@ -52,6 +55,23 @@ function AddMeal() {
         }));
         return;
       }
+
+      // Prepare meal object for context (mock, some values converted)
+      addMeal({
+        dish: state.dish,
+        quantity: state.quantity,
+        macros: {
+          protein: Number(state.protein) || 0,
+          carbs: Number(state.carbs) || 0,
+          fat: Number(state.fat) || 0,
+          fiber: Number(state.fiber) || 0,
+        },
+        photo: state.photo || "",
+        calories:
+          (Number(state.protein) || 0) * 4 +
+          (Number(state.carbs) || 0) * 4 +
+          (Number(state.fat) || 0) * 9,
+      });
       setState((s) => ({
         ...s,
         submitting: false,
@@ -65,7 +85,13 @@ function AddMeal() {
         photo: null,
         error: "",
       }));
-    }, 1000);
+      setTimeout(() => {
+        setState((s) => ({
+          ...s,
+          submitted: false,
+        }));
+      }, 1200);
+    }, 800);
   }
 
   return (
