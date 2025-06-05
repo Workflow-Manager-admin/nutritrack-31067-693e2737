@@ -350,76 +350,186 @@ export function WaterTrackerScreen() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * UserProfileScreen provides a responsive user profile form (height, weight, age, gender, goals) and a BMI/goal summary card.
+ * All fields are Tailwind-styled, adaptive for mobile/desktop, visually separated, and update local state. BMI is mock-calculated on-the-fly.
+ * Main navigation integration is automatic (screen routed via MainContainer).
+ */
 export function UserProfileScreen() {
-  // Local state for mock profile
+  // Profile state, with string defaults for input compatibility
   const [profile, setProfile] = React.useState({
-    name: "Alex Example",
-    age: 28,
+    name: "Alex Example", // Hidden for now
+    age: "28",
     gender: "Other",
-    height: 172,
-    weight: 72,
-    bmi: 24.3,
-    goal_calories: 2000,
-    goal_water: 2000,
+    height: "172",
+    weight: "72",
+    goal_calories: "2000",
+    goal_water: "2000",
   });
 
+  // BMI calculation: weight (kg) / (height (m)^2)
+  function calcBMI(height, weight) {
+    const h = parseFloat(height) / 100;
+    const w = parseFloat(weight);
+    if (!h || !w) return "--";
+    const bmi = w / (h * h);
+    return bmi > 0 ? bmi.toFixed(1) : "--";
+  }
+  const bmi = calcBMI(profile.height, profile.weight);
+
+  // Save handler (mock, provides visual feedback)
+  const [saved, setSaved] = React.useState(false);
+  function handleProfileChange(field, val) {
+    setSaved(false);
+    setProfile((prev) => ({ ...prev, [field]: val }));
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1500);
+  }
+
   return (
-    <section className="p-5">
-      <div className="text-lg font-semibold text-[#3b82f6] mb-3">User Profile</div>
-      <div className="bg-white shadow border rounded-lg p-4 space-y-2">
-        <div className="flex">
-          <span className="mr-2 font-medium">Name:</span>
-          <span>{profile.name}</span>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">Age:</span>
-          <input
-            className="w-16 border rounded px-1"
-            value={profile.age}
-            onChange={e => setProfile({ ...profile, age: e.target.value })}
-            type="number"
-            min="0"
-          />
-          <span className="font-medium ml-2">Gender:</span>
-          <select
-            className="border rounded px-1"
-            value={profile.gender}
-            onChange={e => setProfile({ ...profile, gender: e.target.value })}
+    <section className="px-2 pb-20 pt-6 max-w-md mx-auto w-full flex flex-col gap-5 bg-[#f6f7fa] min-h-[93vh]">
+      <div className="text-lg sm:text-xl font-bold tracking-tight text-[#22c55e] mb-2 text-center">User Profile</div>
+      {/* Responsive two-column on desktop, single on mobile */}
+      <div className="flex flex-col md:flex-row gap-5">
+        {/* Profile Form */}
+        <form
+          className="flex-1 bg-white shadow border rounded-xl p-4 flex flex-col gap-3"
+          onSubmit={handleSubmit}
+          autoComplete="off"
+        >
+          {/* Age, Gender, Height, Weight */}
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <div className="flex gap-2 items-center">
+              <label htmlFor="age" className="font-medium text-gray-700 w-20">Age</label>
+              <input
+                id="age"
+                type="number"
+                min="1"
+                className="w-20 border border-gray-300 rounded px-2 py-1 text-base"
+                value={profile.age}
+                onChange={e => handleProfileChange("age", e.target.value)}
+                required
+              />
+              <label htmlFor="gender" className="font-medium text-gray-700 ml-3 w-16 text-right">Gender</label>
+              <select
+                id="gender"
+                className="border border-gray-300 rounded px-2 py-1"
+                value={profile.gender}
+                onChange={e => handleProfileChange("gender", e.target.value)}
+                required
+              >
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div className="flex gap-2 items-center">
+              <label htmlFor="height" className="font-medium text-gray-700 w-20">Height</label>
+              <input
+                id="height"
+                type="number"
+                min="50"
+                max="250"
+                className="w-20 border border-gray-300 rounded px-2 py-1"
+                value={profile.height}
+                onChange={e => handleProfileChange("height", e.target.value)}
+                required
+              />
+              <span className="ml-1 text-sm text-gray-500">cm</span>
+              <label htmlFor="weight" className="font-medium text-gray-700 ml-3 w-16 text-right">Weight</label>
+              <input
+                id="weight"
+                type="number"
+                min="20"
+                max="220"
+                className="w-20 border border-gray-300 rounded px-2 py-1"
+                value={profile.weight}
+                onChange={e => handleProfileChange("weight", e.target.value)}
+                required
+              />
+              <span className="ml-1 text-sm text-gray-500">kg</span>
+            </div>
+          </div>
+
+          {/* Daily Goals */}
+          <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-1">
+            <label htmlFor="goal_calories" className="font-medium text-gray-700 w-32">Calories Goal</label>
+            <input
+              id="goal_calories"
+              type="number"
+              min="500"
+              max="7000"
+              className="w-28 border border-gray-300 rounded px-2 py-1"
+              value={profile.goal_calories}
+              onChange={e => handleProfileChange("goal_calories", e.target.value)}
+              required
+            />
+            <span className="ml-1 text-sm text-gray-500">kcal/day</span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <label htmlFor="goal_water" className="font-medium text-gray-700 w-32">Water Goal</label>
+            <input
+              id="goal_water"
+              type="number"
+              min="500"
+              max="10000"
+              className="w-28 border border-gray-300 rounded px-2 py-1"
+              value={profile.goal_water}
+              onChange={e => handleProfileChange("goal_water", e.target.value)}
+              required
+            />
+            <span className="ml-1 text-sm text-gray-500">ml/day</span>
+          </div>
+          <button
+            className="mt-4 bg-[#22c55e] text-white px-4 py-2 rounded font-semibold shadow hover:bg-[#15803d] transition text-base"
+            type="submit"
           >
-            <option>Male</option><option>Female</option><option>Other</option>
-          </select>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">Height:</span>
-          <input className="w-16 border rounded px-1" value={profile.height}
-            onChange={e => setProfile({ ...profile, height: e.target.value })}
-            type="number" min="0" /> <span>cm</span>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">Weight:</span>
-          <input className="w-16 border rounded px-1" value={profile.weight}
-            onChange={e => setProfile({ ...profile, weight: e.target.value })}
-            type="number" min="0" /> <span>kg</span>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">BMI:</span>
-          <span>{profile.bmi}</span>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">Goal Calories:</span>
-          <input className="w-20 border rounded px-1" value={profile.goal_calories}
-            onChange={e => setProfile({ ...profile, goal_calories: e.target.value })}
-            type="number" min="0" /> <span>kcal/day</span>
-        </div>
-        <div className="flex gap-2">
-          <span className="font-medium">Goal Water:</span>
-          <input className="w-20 border rounded px-1" value={profile.goal_water}
-            onChange={e => setProfile({ ...profile, goal_water: e.target.value })}
-            type="number" min="0" /> <span>ml/day</span>
+            {saved ? "Saved!" : "Save Profile"}
+          </button>
+          <span className="block text-xs text-gray-400 mt-1 mb-2">Profile changes persist for this session only.</span>
+        </form>
+
+        {/* BMI & Goal Summary Card */}
+        <div className="flex-1 rounded-xl bg-white border shadow p-4 flex flex-col items-center gap-3 max-w-xs mx-auto">
+          <div className="w-full text-base font-semibold mb-1 flex items-center justify-center gap-2 text-[#3b82f6]">
+            <svg className="w-5 h-5" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="20" height="20" rx="5" fill="#e0f2fe"/><path d="M11 6v7.5l4 2" stroke="#3b82f6" strokeWidth="1.7" fill="none" strokeLinecap="round"/></svg>
+            Health Overview
+          </div>
+          {/* BMI Box */}
+          <div className="flex flex-col items-center w-full mb-2">
+            <div className="text-xs text-gray-500 mb-0.5">BMI (mock):</div>
+            <div className="text-2xl font-bold text-[#38bdf8] mb-0">{bmi}</div>
+            <span className="text-sm text-gray-400 font-medium">
+              {bmi !== "--" ? (
+                bmi < 18.5 ? "Underweight"
+                  : bmi < 25 ? "Normal"
+                  : bmi < 30 ? "Overweight"
+                  : "Obese"
+              ) : "(set height/weight)"}
+            </span>
+          </div>
+          {/* Goal Quick Overview */}
+          <div className="w-full flex flex-col gap-1 bg-[#f0f9ff] rounded-xl p-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500 font-medium">Calories Goal</span>
+              <span className="font-semibold text-[#22c55e] text-sm">{profile.goal_calories || "--"} kcal</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500 font-medium">Water Goal</span>
+              <span className="font-semibold text-[#38bdf8] text-sm">{profile.goal_water || "--"} ml</span>
+            </div>
+          </div>
+          <div className="mt-2 text-xs text-gray-400 text-center">
+            BMI and goals are for guidance only.<br />
+            <span className="italic">No profile data is saved to a server.</span>
+          </div>
         </div>
       </div>
-      <div className="text-xs text-gray-500 mt-2">BMI calculation and profile persistence are placeholders.</div>
     </section>
   );
 }
