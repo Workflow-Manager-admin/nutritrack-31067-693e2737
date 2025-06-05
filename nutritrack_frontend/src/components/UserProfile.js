@@ -1,43 +1,45 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../AppContext";
 
 /**
  * PUBLIC_INTERFACE
- * UserProfile component for NutriTrack.
- * Lets users update height, weight, age, gender, and set goals.
- * Shows mock BMI calculation, tooltip explanations, and uses Tailwind.
+ * UserProfile component: view and edit user profile, updates via context.
  */
 function UserProfile() {
-  // Mock state for profile and goals
-  const [profile, setProfile] = useState({
-    name: "Alex Doe",
-    age: 29,
-    gender: "other",
-    height: 170, // cm
-    weight: 68, // kg
-    calorieGoal: 2000,
-    waterGoal: 2000,
-  });
+  const { profile, updateProfile } = useContext(AppContext);
   const [edit, setEdit] = useState(false);
+  const [localProfile, setLocalProfile] = useState(profile);
   const [toolTip, setToolTip] = useState({ bmi: false, calorie: false });
+
+  // When profile in context changes (i.e. elsewhere), sync edit fields
+  React.useEffect(() => {
+    setLocalProfile(profile);
+  }, [profile]);
 
   // Calculate BMI (mock formula)
   const bmi =
-    profile.height > 0
-      ? ((profile.weight / Math.pow(profile.height / 100, 2)).toFixed(1))
+    localProfile.height > 0
+      ? ((localProfile.weight / Math.pow(localProfile.height / 100, 2)).toFixed(1))
       : "—";
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setProfile((p) => ({
+    setLocalProfile((p) => ({
       ...p,
-      [name]: name === "age" || name === "height" || name === "weight" || name === "calorieGoal" || name === "waterGoal"
-        ? parseInt(value, 10)
-        : value,
+      [name]:
+        name === "age" ||
+        name === "height" ||
+        name === "weight" ||
+        name === "calorieGoal" ||
+        name === "waterGoal"
+          ? parseInt(value, 10)
+          : value,
     }));
   }
 
   function handleSave(e) {
     e.preventDefault();
+    updateProfile(localProfile);
     setEdit(false);
   }
 
