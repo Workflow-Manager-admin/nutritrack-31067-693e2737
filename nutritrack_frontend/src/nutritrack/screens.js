@@ -267,21 +267,66 @@ export function DashboardScreen() {
 export function AddMealScreen() {
   // All state is local mock; image upload/preview, macros input, log meal
   return (
-    <section className="h-full flex flex-col p-5">
-      <div className="text-lg font-semibold mb-2 text-[#3b82f6]">Add Meal</div>
-      <div className="bg-white rounded-lg border shadow p-4 flex flex-col gap-2">
-        <label className="text-xs mb-1">Upload Dish Image (mock)</label>
-        <input type="file" accept="image/*" disabled className="opacity-60 cursor-not-allowed" />
+    <section
+      className="h-full flex flex-col p-5"
+      data-testid="add-meal-section"
+      aria-labelledby="add-meal-header"
+    >
+      <div
+        className="text-lg font-semibold mb-2 text-[#3b82f6]"
+        id="add-meal-header"
+        data-testid="add-meal-title"
+      >
+        Add Meal
+      </div>
+      <div
+        className="bg-white rounded-lg border shadow p-4 flex flex-col gap-2"
+        data-testid="add-meal-form"
+        role="form"
+        aria-label="Add Meal Form"
+      >
+        <label className="text-xs mb-1" htmlFor="mock-image-upload">
+          Upload Dish Image (mock)
+        </label>
+        <input
+          id="mock-image-upload"
+          data-testid="addmeal-image-upload"
+          type="file"
+          accept="image/*"
+          disabled
+          className="opacity-60 cursor-not-allowed"
+        />
         <div className="my-2 text-gray-400 text-xs">[Image upload is placeholder]</div>
-        <label className="text-xs">Dish Name</label>
-        <input className="border px-2 py-1 rounded" placeholder="e.g. Grilled Chicken" />
-        <label className="text-xs">Quantity</label>
-        <input className="border px-2 py-1 rounded" placeholder="e.g. 1 plate" />
+        <label className="text-xs" htmlFor="addmeal-dishname">
+          Dish Name
+        </label>
+        <input
+          id="addmeal-dishname"
+          data-testid="addmeal-dishname"
+          className="border px-2 py-1 rounded"
+          placeholder="e.g. Grilled Chicken"
+        />
+        <label className="text-xs" htmlFor="addmeal-quantity">
+          Quantity
+        </label>
+        <input
+          id="addmeal-quantity"
+          data-testid="addmeal-quantity"
+          className="border px-2 py-1 rounded"
+          placeholder="e.g. 1 plate"
+        />
         <div className="flex gap-1 text-gray-500 text-xs">
           <span>Estimated: 400 kcal | 30g P | 20g C | 12g F</span>
           <span className="pl-2">(Edit coming soon)</span>
         </div>
-        <button className="bg-[#22c55e] text-white p-2 rounded mt-2">Log Meal</button>
+        <button
+          className="bg-[#22c55e] text-white p-2 rounded mt-2"
+          type="button"
+          data-testid="addmeal-logmeal-btn"
+          aria-label="Log Meal"
+        >
+          Log Meal
+        </button>
       </div>
     </section>
   );
