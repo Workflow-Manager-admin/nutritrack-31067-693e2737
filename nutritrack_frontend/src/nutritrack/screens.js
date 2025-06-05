@@ -230,37 +230,122 @@ export function AddMealScreen() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * WaterTrackerScreen - Responsive water intake tracker screen.
+ * Lets users add set amounts or custom ml, shows a running tally,
+ * and a visual animated water bottle fill. Layout and controls styled with TailwindCSS.
+ * All logic is mock/state-only.
+ */
 export function WaterTrackerScreen() {
-  // Basic glass-adding logic with state
-  const [water, setWater] = React.useState(1400);
-  const goal = 2000;
+  const DAILY_GOAL = 2000; // In ml
+  const [water, setWater] = React.useState(0); // ml log
+  const [customML, setCustomML] = React.useState(""); // For custom input
+
   function addWater(amount) {
-    setWater((w) => Math.min(goal, w + amount));
+    setWater((prev) => Math.min(DAILY_GOAL, prev + amount));
   }
+
+  function handleCustomInput(e) {
+    const val = e.target.value.replace(/[^0-9]/g,"");
+    setCustomML(val);
+  }
+
+  function addCustom() {
+    const value = parseInt(customML, 10);
+    if (!isNaN(value) && value > 0) {
+      addWater(value);
+      setCustomML("");
+    }
+  }
+
+  // percent full capped at 100
+  const pct = Math.min(100, Math.round((water / DAILY_GOAL) * 100));
+
   return (
-    <section className="flex flex-col items-center justify-center pt-8 gap-3">
-      <div className="text-lg font-semibold text-[#38bdf8]">Water Intake</div>
-      <div className="relative flex flex-col items-center my-4">
-        {/* Water bottle visual: fill effect w/height by percent */}
-        <div className="w-14 h-36 rounded-b-2xl border-4 border-[#3b82f6] bg-[#e0f2fe] flex flex-col justify-end overflow-hidden">
+    <section className="flex flex-col items-center justify-start pt-10 gap-6 min-h-[89vh] bg-[#f6f7fa] px-2">
+      <div className="text-lg sm:text-xl font-bold tracking-tight text-[#38bdf8] mb-1">
+        Water Intake Tracker
+      </div>
+
+      {/* Bottle Visual */}
+      <div className="relative h-44 flex flex-col items-center mt-2 mb-2">
+        <div className="w-16 sm:w-20 h-40 sm:h-48 rounded-b-3xl border-4 border-[#3b82f6] bg-[#e0f2fe] flex flex-col justify-end overflow-hidden shadow-inner">
           <div
-            className="bg-[#38bdf8] w-full transition-all"
-            style={{ height: `${Math.round((water / goal) * 100)}%`, minHeight: 8 }}
+            className="bg-[#38bdf8] w-full transition-all duration-500"
+            style={{
+              height: `${pct}%`,
+              minHeight: (water === 0 ? 0 : 8),
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              opacity: pct > 0 ? 0.95 : 0.4,
+            }}
           />
         </div>
-        <span className="mt-2 font-bold text-base">{water} / {goal} ml</span>
-        <span className="text-xs text-gray-500">Goal: {goal}ml</span>
+        <span className="absolute inset-x-0 top-[60%] text-center font-semibold text-md text-[#3b82f6] select-none pointer-events-none drop-shadow">
+          {water} <span className="text-xs font-normal">/ {DAILY_GOAL} ml</span>
+        </span>
       </div>
-      <div className="flex gap-4 mt-2">
-        <button className="bg-[#22c55e] px-4 py-2 rounded text-white" onClick={() => addWater(200)}>
-          +200ml
-        </button>
-        <button className="bg-[#3b82f6] px-4 py-2 rounded text-white" onClick={() => addWater(100)}>
-          +100ml
-        </button>
+
+      {/* Tally & Visual Feedback */}
+      <div className="text-sm text-gray-500 mb-1">
+        {pct >= 100 ? (
+          <span className="text-[#22c55e] font-bold">🎉 Goal reached!</span>
+        ) : (
+          <>
+            <span className="font-medium">{pct}%</span> of daily goal ({DAILY_GOAL} ml)
+          </>
+        )}
       </div>
-      <span className="text-xs text-gray-400 mt-2">Visual feedback is a placeholder.</span>
+
+      {/* Controls: preset buttons + custom */}
+      <div className="flex flex-col gap-3 items-center w-full max-w-xs">
+        <div className="flex gap-3 w-full">
+          <button
+            className="bg-[#22c55e] hover:bg-[#16a34a] transition-colors text-white font-semibold py-2 px-5 rounded flex-1"
+            onClick={() => addWater(200)}
+            disabled={pct >= 100}
+          >+200ml</button>
+          <button
+            className="bg-[#3b82f6] hover:bg-[#1e56c6] transition-colors text-white font-semibold py-2 px-5 rounded flex-1"
+            onClick={() => addWater(100)}
+            disabled={pct >= 100}
+          >+100ml</button>
+        </div>
+        <form
+          className="flex gap-2 w-full"
+          onSubmit={e => { e.preventDefault(); addCustom(); }}
+        >
+          <input
+            type="number"
+            min="1"
+            max={DAILY_GOAL - water}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={customML}
+            onChange={handleCustomInput}
+            className="border border-[#3b82f6] text-[#222] px-2 py-1 rounded w-full flex-1 bg-white"
+            placeholder="Custom (ml)"
+            disabled={pct >= 100}
+          />
+          <button
+            type="submit"
+            className="bg-[#38bdf8] text-white px-3 py-1.5 rounded"
+            disabled={!customML || pct >= 100}
+          >Add</button>
+        </form>
+      </div>
+
+      {/* Reset button for demo */}
+      <button
+        className="mt-3 text-xs text-gray-400 underline hover:text-[#3b82f6] transition"
+        onClick={() => setWater(0)}
+        style={{visibility: water > 0 ? "visible" : "hidden"}}
+      >Reset</button>
+
+      <div className="mt-6 text-xs text-gray-400 text-center px-2">
+        Visual feedback is a placeholder. All logic is in-memory mock. Bottle and controls adapt for mobile or desktop.
+      </div>
     </section>
   );
 }
