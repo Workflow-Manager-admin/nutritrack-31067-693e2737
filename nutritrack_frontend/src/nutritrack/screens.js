@@ -534,66 +534,124 @@ export function UserProfileScreen() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * MealHistoryScreen - Scrollable, engaging meal log with images, macros, and quantities.
+ * Uses mock data, mobile-friendly, modern TailwindCSS.
+ */
 export function MealHistoryScreen() {
-  // Mock meal log, with date, dish, more
+  // Mock meals with a few dates
   const dummyMeals = [
     {
-      id: 1,
-      date: "2024-06-01",
-      dish: "Omelette + Toast",
+      id: 101,
+      date: "2024-06-03",
+      dish: "Berry Yogurt Parfait",
+      image: "https://img.icons8.com/color/48/yogurt.png",
+      quantity: "1 glass",
+      calories: 190,
+      protein: 7,
+      carbs: 28,
+      fat: 4,
+    },
+    {
+      id: 102,
+      date: "2024-06-03",
+      dish: "Spinach Omelette",
       image: "https://img.icons8.com/fluency/48/egg.png",
-      quantity: "1 plate",
-      calories: 280,
-      protein: 18,
-      carbs: 22,
-      fat: 10,
+      quantity: "2 eggs",
+      calories: 210,
+      protein: 16,
+      carbs: 2,
+      fat: 13,
     },
     {
-      id: 2,
-      date: "2024-06-01",
-      dish: "Salad Bowl",
-      image: "https://img.icons8.com/color/48/salad.png",
-      quantity: "1 bowl",
-      calories: 220,
-      protein: 6,
-      carbs: 30,
-      fat: 8,
-    },
-    {
-      id: 3,
-      date: "2024-06-01",
-      dish: "Grilled Chicken",
+      id: 103,
+      date: "2024-06-02",
+      dish: "Chicken Rice Bowl",
       image: "https://img.icons8.com/fluency/48/chicken-leg.png",
-      quantity: "200g",
-      calories: 400,
-      protein: 35,
-      carbs: 0,
-      fat: 20,
+      quantity: "1 bowl",
+      calories: 480,
+      protein: 34,
+      carbs: 52,
+      fat: 14,
+    },
+    {
+      id: 104,
+      date: "2024-06-02",
+      dish: "Greek Salad",
+      image: "https://img.icons8.com/color/48/salad.png",
+      quantity: "1 plate",
+      calories: 175,
+      protein: 6,
+      carbs: 14,
+      fat: 9,
+    },
+    {
+      id: 105,
+      date: "2024-06-01",
+      dish: "Avocado Toast",
+      image: "https://img.icons8.com/color/48/avocado.png",
+      quantity: "2 slices",
+      calories: 265,
+      protein: 8,
+      carbs: 32,
+      fat: 12,
+    },
+    {
+      id: 106,
+      date: "2024-06-01",
+      dish: "Banana",
+      image: "https://img.icons8.com/color/48/banana.png",
+      quantity: "1 pc",
+      calories: 105,
+      protein: 1,
+      carbs: 27,
+      fat: 0,
     },
   ];
 
+  // Group meals by date (most recent first)
+  const mealsByDate = {};
+  for (const meal of dummyMeals) {
+    if (!mealsByDate[meal.date]) mealsByDate[meal.date] = [];
+    mealsByDate[meal.date].push(meal);
+  }
+  const sortedDates = Object.keys(mealsByDate).sort((a, b) => b.localeCompare(a));
+
   return (
-    <section className="p-4">
-      <div className="text-lg font-semibold text-[#22c55e] mb-2">Meal History</div>
-      <div className="flex flex-col gap-3 max-h-[62vh] overflow-y-auto pr-2">
-        {dummyMeals.map((meal) => (
-          <div key={meal.id} className="bg-white border rounded-lg flex items-center p-2 shadow">
-            <img src={meal.image} alt={meal.dish} className="w-12 h-12 object-cover rounded-xl mr-3"/>
-            <div className="flex flex-col">
-              <span className="font-bold text-gray-700">{meal.dish}</span>
-              <span className="text-xs text-gray-500">{meal.quantity} - {meal.date}</span>
-              <div className="text-xs text-gray-600 flex flex-wrap gap-2 mt-1">
-                <span>kcal:<b>{meal.calories}</b></span>
-                <span>P:{meal.protein}g</span>
-                <span>C:{meal.carbs}g</span>
-                <span>F:{meal.fat}g</span>
+    <section className="px-2 pb-20 pt-2 max-w-md mx-auto w-full bg-[#f6f7fa] min-h-[93vh] flex flex-col">
+      <div className="text-lg sm:text-xl font-bold tracking-tight text-[#22c55e] mb-3 text-center">Meal History</div>
+      <div className="flex-1 flex flex-col gap-3 max-h-[67vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#22c55e]/30 scrollbar-track-transparent pr-1">
+        {sortedDates.map((date) => (
+          <div key={date}>
+            <div className="text-xs font-semibold mb-2 mt-2 text-gray-500 tracking-tight">{new Date(date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric"})}</div>
+            {mealsByDate[date].map((meal) => (
+              <div
+                key={meal.id}
+                className="group transition hover:ring-2 hover:ring-[#22c55e]/70 flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-2 shadow-sm mb-1"
+              >
+                <img
+                  src={meal.image}
+                  alt={meal.dish}
+                  className="w-14 h-14 object-cover rounded-xl border border-[#e5e7eb] bg-[#fafafc] group-hover:scale-105 group-hover:shadow transition"
+                  loading="lazy"
+                />
+                <div className="flex-1 flex flex-col justify-between min-w-0">
+                  <span className="font-bold text-gray-800 truncate">{meal.dish}</span>
+                  <span className="text-[11px] text-gray-400 mb-1">{meal.quantity}</span>
+                  <div className="flex flex-row gap-2 flex-wrap items-center text-xs text-gray-500 font-medium">
+                    <span className="font-semibold text-[#22c55e] bg-[#e3ffe3] px-2 py-0.5 rounded mr-1">🔥 {meal.calories} kcal</span>
+                    <span className="bg-[#e0f2fe] text-[#3b82f6] px-1.5 py-0.5 rounded">P:{meal.protein}g</span>
+                    <span className="bg-[#f8fde5] text-[#a3e635] px-1.5 py-0.5 rounded">C:{meal.carbs}g</span>
+                    <span className="bg-[#fff7ec] text-[#f59e42] px-1.5 py-0.5 rounded">F:{meal.fat}g</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         ))}
       </div>
-      <div className="text-xs text-gray-400 mt-2">This is mock data; logging and scroll are live.</div>
+      <div className="text-xs text-gray-400 mt-3 text-center">Mock data, for demo only – logging, scroll, & style are live.</div>
     </section>
   );
 }
