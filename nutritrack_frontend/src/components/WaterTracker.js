@@ -1,27 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../AppContext";
 
 /**
  * PUBLIC_INTERFACE
- * WaterTracker component for NutriTrack.
- * Lets users log water intake (ml), visualizes progress with a fillable bottle, and uses mock data/state.
- * Mobile-first, styled with Tailwind and NutriTrack palette, includes tooltips and feedback.
+ * WaterTracker: Log and visualize water intake using central app context.
  */
 function WaterTracker() {
-  const WATER_GOAL = 2000; // ml, for mockup
-  const [current, setCurrent] = useState(1000);
+  const { water, addWater, profile } = useContext(AppContext);
   const [input, setInput] = useState("");
   const [toolTip, setToolTip] = useState(false);
   const [feedback, setFeedback] = useState("");
+
+  const WATER_GOAL = profile.waterGoal || 2000;
 
   function handleAdd() {
     const amount = parseInt(input, 10);
     if (isNaN(amount) || amount <= 0) {
       setFeedback("Please enter a valid amount (ml).");
-    } else if (current + amount > WATER_GOAL) {
+    } else if (water + amount > WATER_GOAL) {
       setFeedback("You've reached your daily goal!");
-      setCurrent(WATER_GOAL);
+      addWater(WATER_GOAL - water);
     } else {
-      setCurrent((prev) => prev + amount);
+      addWater(amount);
       setFeedback("Logged! Stay hydrated 💧");
     }
     setInput("");
@@ -29,7 +29,7 @@ function WaterTracker() {
   }
 
   // Bottle liquid height
-  const bottleFill = Math.min(100, Math.round((current / WATER_GOAL) * 100));
+  const bottleFill = Math.min(100, Math.round((water / WATER_GOAL) * 100));
 
   return (
     <div className="w-full max-w-md mx-auto px-3 py-2">
