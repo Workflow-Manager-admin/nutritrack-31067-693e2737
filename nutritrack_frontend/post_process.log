@@ -3,3 +3,4 @@ npm WARN deprecated stable@0.1.8: Modern JS already guarantees Array#sort() is a
 npm WARN deprecated workbox-cacheable-response@6.6.0: workbox-background-sync@6.6.0
 npm WARN deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
 npm WARN deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+npm WARN deprecated rollup-plugin-terser@7.0.2: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-terser
