@@ -204,9 +204,18 @@ export function DashboardScreen() {
       </div>
 
       {/* Water visual (simple circular chart style) */}
-      <div className="flex items-center justify-between gap-4 mb-1 bg-white border rounded-xl shadow p-3">
+      <div
+        className="flex items-center justify-between gap-4 mb-1 bg-white border rounded-xl shadow p-3"
+        data-testid="water-summary"
+      >
         <div className="flex items-center gap-2">
-          <svg viewBox="0 0 34 34" className="w-10 h-10" fill="none">
+          <svg
+            viewBox="0 0 34 34"
+            className="w-10 h-10"
+            fill="none"
+            aria-hidden="true"
+            data-testid="water-svg"
+          >
             <circle
               cx="17"
               cy="17"
@@ -231,11 +240,19 @@ export function DashboardScreen() {
                   stroke="#38bdf8" strokeWidth={1.5} fill="#e0f2fe" />
           </svg>
           <div>
-            <div className="text-md font-bold text-[#38bdf8]">{actual.water}/{dailyGoals.water} ml</div>
+            <div
+              className="text-md font-bold text-[#38bdf8]"
+              data-testid="water-summary-value"
+            >
+              {actual.water}/{dailyGoals.water} ml
+            </div>
             <div className="text-xs text-gray-500">Water Intake</div>
           </div>
         </div>
-        <div className="text-xs text-gray-400 font-medium">
+        <div
+          className="text-xs text-gray-400 font-medium"
+          data-testid="water-summary-pct"
+        >
           {getPct(actual.water, dailyGoals.water)}% goal
         </div>
       </div>
