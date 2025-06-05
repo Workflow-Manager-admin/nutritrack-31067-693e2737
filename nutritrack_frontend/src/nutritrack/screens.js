@@ -113,21 +113,45 @@ export function DashboardScreen() {
 
   // Responsive: grid 2 on mobile, 3 on sm+
   return (
-    <section className="p-4 bg-[#f6f7fa] min-h-[93vh] flex flex-col">
-      <h2 className="mb-1 text-lg font-semibold text-[#22c55e] leading-tight tracking-tight">Today's Nutrition Summary</h2>
+    <section
+      className="p-4 bg-[#f6f7fa] min-h-[93vh] flex flex-col"
+      data-testid="dashboard-section"
+      aria-labelledby="dashboard-header"
+    >
+      <h2
+        id="dashboard-header"
+        className="mb-1 text-lg font-semibold text-[#22c55e] leading-tight tracking-tight"
+        data-testid="dashboard-title"
+      >
+        Today's Nutrition Summary
+      </h2>
       {/* Overall Calories Progress (big card) */}
-      <div className="bg-white rounded-xl border shadow-md mb-4 p-4 flex items-center gap-4">
-        <div className="flex-shrink-0">{items[0].icon}</div>
+      <div
+        className="bg-white rounded-xl border shadow-md mb-4 p-4 flex items-center gap-4"
+        data-testid="card-calories"
+        aria-label="calories-goal-progress"
+      >
+        <div className="flex-shrink-0" aria-hidden="true">{items[0].icon}</div>
         <div className="flex-1">
           <div className="flex justify-between text-sm mb-1 font-medium text-gray-700">
             <span>Calories</span>
-            <span className="font-bold text-[#22c55e]">{actual.calories} / {dailyGoals.calories} kcal</span>
+            <span
+              className="font-bold text-[#22c55e]"
+              data-testid="calories-value"
+            >
+              {actual.calories} / {dailyGoals.calories} kcal
+            </span>
           </div>
           {/* Progress Bar */}
           <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-1">
             <div
               className="absolute h-3 left-0 top-0 rounded-full transition-all duration-300"
               style={{ width: `${getPct(actual.calories, dailyGoals.calories)}%`, background: items[0].color }}
+              aria-valuenow={getPct(actual.calories, dailyGoals.calories)}
+              aria-valuemax={100}
+              aria-label="calories-progress-bar"
+              role="progressbar"
+              data-testid="calories-progressbar"
             />
           </div>
           <div className="text-xs font-medium text-gray-400">
