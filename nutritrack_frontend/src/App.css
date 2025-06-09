@@ -1,0 +1,537 @@
+:root {
+  /* NutriTrack theme */
+  --primary: #22c55e;
+  --secondary: #3b82f6;
+  --accent: #ffffff;
+  --base-light: #f0fdf4;
+  --base-dark: #151f18;
+  --bg-paper: #f0f8ff;
+  --bg-elevated: #fff;
+  --text-color: #1e293b;
+  --text-secondary: #334155;
+  --border-color: #d1d5db;
+  --success: #16a34a;
+  --warn: #f59e42;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: var(--bg-paper);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* NutriTrack main app container + layout */
+.nt-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-paper);
+}
+
+.nt-main {
+  flex: 1;
+  width: 100%;
+  margin-bottom: 60px; /* space for nav */
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 8px;
+}
+
+@media (min-width: 740px) {
+  .nt-app { background: var(--base-light); }
+  .nt-main { margin-bottom: 0; padding: 32px 0 24px 0;}
+}
+
+/* Bottom Navigation */
+.nt-bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; width: 100vw;
+  background: var(--accent);
+  box-shadow: 0 -1px 8px #0003;
+  display: flex; 
+  justify-content: space-around;
+  z-index: 100;
+  border-top: 1.5px solid var(--border-color);
+  height: 60px;
+}
+.nt-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  padding: 5px 0 0 0;
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+  height: 100%;
+}
+
+.nt-nav-active, .nt-nav-btn:focus-visible {
+  color: var(--primary);
+  background: #e5ffef;
+}
+
+.nt-nav-icon svg { display: block; margin: 2px auto 0 auto; }
+.nt-nav-label { font-size: 0.72rem; padding-top: 1px; }
+
+@media (min-width: 700px) {
+  .nt-bottom-nav { max-width: 500px; left: 50%; transform: translateX(-50%); border-radius: 13px 13px 0 0; }
+}
+
+/* Dashboard cards */
+.nt-dashboard {
+  margin: 0;
+  padding: 16px 0;
+  width: 100%;
+}
+.nt-d-title { font-size: 1.5rem; font-weight: 600; margin: 12px 0 18px 0; }
+
+.nt-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (min-width: 500px) {
+  .nt-card-row { grid-template-columns: repeat(3,1fr);}
+}
+.nt-card {
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  box-shadow: 0 2px 5px #0001;
+  padding: 14px 10px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 85px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.nt-card:focus-within, .nt-card:hover { box-shadow: 0 3px 9px #0ea96421;}
+.nt-m-label { color: var(--secondary); font-weight: 500; font-size: 0.95rem; }
+.nt-m-value { font-size: 1.3rem; font-weight: 600; margin: 3px 0 1px 0; }
+
+.nt-bar-bg, .nt-water-bar-bg {
+  position: relative;
+  height: 7px;
+  background: #e6e6f5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 7px 0 3px 0;
+}
+.nt-bar-fill, .nt-water-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.7s cubic-bezier(0.65,0,0.35,1);
+}
+.nt-bar-fill { background: var(--primary); }
+.nt-water-bar-fill { background: var(--secondary); }
+.nt-card-goal { color: var(--text-secondary); font-size: 0.9em; }
+
+/* Water card (dashboard) */
+.nt-water-card {
+  background: var(--secondary);
+  color: var(--accent);
+  border-radius: 12px;
+  margin: 17px 0 4px 0;
+  padding: 1.1em 1em 1.2em 1.2em;
+  box-shadow: 0 2px 7px #1e64af0e;
+  position: relative;
+}
+.nt-water-stats { font-size: 1.09em; font-weight: 600; }
+.nt-water-card .nt-card-goal { color: #bbdefb; margin-left: 4px; }
+.nt-water-bar-bg { background: #bcd3fa; height: 7px; overflow: hidden; border-radius: 7px;}
+.nt-bar-fill, .nt-water-bar-fill { min-width: 2.5%; }
+
+/* Dashboard tip */
+.nt-tip {
+  margin: 24px 3px 0 0;
+  background: #f4f8f8;
+  font-size: 1em;
+  color: var(--primary);
+  border-radius: 11px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+/* Modal Styles (Add Meal, Water Tracker) */
+.nt-modal {
+  position: fixed;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: #0008;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 201;
+  animation: fadeInModal 0.21s ease;
+}
+@keyframes fadeInModal { from { opacity: 0;} to {opacity:1;} }
+
+.nt-add-meal, .nt-water-modal {
+  background: var(--accent);
+  color: var(--text-color);
+  border-radius: 20px 20px 0 0;
+  min-height: 65vh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 36px 18px 18px 18px;
+  box-shadow: 0 0 26px 2px #22753a24;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+@media (min-width: 620px) {
+  .nt-modal {
+    align-items: center;
+    padding-top: 28px;
+  }
+  .nt-add-meal, .nt-water-modal {
+    border-radius: 20px;
+    min-height: 440px;
+    width: 410px;
+    padding: 36px 32px 28px 32px;
+  }
+}
+.nt-close {
+  position: absolute;
+  top: 13px; right: 17px;
+  font-size: 1.7rem;
+  background: none;
+  border: 0;
+  color: var(--secondary);
+  cursor: pointer;
+}
+.nt-add-meal h2, .nt-water-modal h2 { margin: 0 0 9px 0; font-size: 1.18rem; }
+
+.nt-meal-form label, .nt-water-form label, .nt-profile-form label {
+  display: block;
+  font-size: 1.06em;
+  color: var(--text-secondary);
+  margin: 6px 0 7px 0;
+  font-weight: 500;
+}
+.nt-meal-form input[type="text"], .nt-meal-form input[type="number"],
+.nt-profile-form input[type="number"], .nt-profile-form input[type="text"], 
+.nt-profile-form select,
+.nt-goals-edit input,
+.nt-water-custom input {
+  width: 90%;
+  max-width: 170px;
+  font-size: 1em;
+  padding: 7px 9px;
+  margin-left: 0;
+  margin-right: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: #fafdff;
+  color: var(--text-color);
+  font-family: inherit;
+  outline: none;
+  transition: border 0.18s;
+}
+.nt-meal-form input:focus, .nt-profile-form input:focus, .nt-water-custom input:focus {
+  border: 1.8px solid var(--primary);
+}
+
+.nt-meal-form .nt-btn-submit,
+.nt-profile-form .nt-btn-submit,
+.nt-water-custom .nt-btn-submit {
+  background: var(--primary);
+  color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  font-size: 1.06rem;
+  padding: 10px 16px;
+  margin-top: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.nt-meal-form .nt-btn-submit:hover, .nt-profile-form .nt-btn-submit:hover,
+.nt-water-custom .nt-btn-submit:hover {
+  background: #139946;
+}
+.nt-btn-water {
+  background: var(--secondary);
+  color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  font-size: 1.02rem;
+  padding: 7px 13px;
+  margin: 7px 4px 5px 0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.nt-btn-water:hover, .nt-btn-water:focus { background: #2154ae;}
+.nt-btn-group { display: flex; flex-wrap: wrap; gap: 4px; margin: 15px 0 0 0;}
+.nt-water-form { margin: 13px 0 0 0;}
+.nt-water-note { color: var(--primary); font-size: 1em; margin: 2px 0 0 0; }
+.nt-water-progress-visual { display: flex; align-items: center; margin-bottom: 9px;}
+
+.nt-water-custom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nt-show-macros, .nt-show-goals {
+  background: none;
+  color: var(--secondary);
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 4px 0;
+  padding: 3px 10px;
+  text-align: left;
+  font-weight: 500;
+}
+.nt-show-macros:hover, .nt-show-goals:hover { text-decoration: underline; color: var(--primary);}
+
+.nt-upload-btn {
+  background: var(--secondary);
+  color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  padding: 6px 17px;
+  margin: 7px 0 0 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.nt-upload-btn:hover { background: #2154ae;}
+
+.nt-upload-preview {
+  margin: 8px 0 0 0;
+  width: 56px; height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-color);
+  display: block;
+}
+
+.nt-macros-edit label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.nt-macros-edit input {
+  width: 68px;
+}
+
+.nt-profile-form {
+  margin: 8px 0 0 0;
+}
+.nt-bmi-row { margin: 8px 0 6px 0; font-size: 1.07em;}
+.nt-bmi { color: var(--primary); font-weight: 600;}
+
+.nt-goals-edit label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.nt-profile-note {
+  background: #e0f8ea;
+  border-radius: 9px;
+  color: #0fae4a;
+  font-size: 0.97em;
+  margin: 16px 0 4px 0;
+  padding: 8px 11px;
+}
+.nt-history {
+  margin: 0; padding: 0; width: 100%;
+}
+.nt-history-list {
+  margin-top: 13px;
+}
+.nt-history-date {
+  color: var(--secondary);
+  font-size: 1.05em;
+  font-weight: 550;
+  margin: 10px 0 4px 3px;
+}
+.nt-history-meals {
+  list-style: none;
+  padding: 0; margin: 0;
+}
+.nt-history-meal-card {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 0 9px 0;
+  background: var(--bg-elevated);
+  border-radius: 11px;
+  box-shadow: 0 2.2px 6.4px #0001;
+  padding: 7px 11px;
+  gap: 12px;
+}
+.nt-history-imgwrap {
+  width: 48px; height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0f2fe;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.nt-history-img {
+  width: 45px; height: 45px; object-fit: cover; border-radius: 6px;
+}
+.nt-history-placeholder {
+  font-size: 1.6em; color: #a5b4fc; padding: 4px 0 0 0;
+}
+.nt-history-desc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.nt-history-name { 
+  font-weight: 600; font-size: 1.01em; color: var(--primary);
+}
+.nt-history-qty, .nt-history-macros {
+  color: var(--text-secondary); font-size: 0.93em;
+}
+.nt-history-empty {
+  color: var(--text-secondary);
+  background: #f1f7fc;
+  padding: 16px; border-radius: 13px; text-align: center;
+  font-style: italic;
+  margin: 42px 0 0 0;
+}
+
+@media (max-width: 400px) {
+  .nt-card-row { grid-template-columns: 1fr;}
+}
+
+@media (max-width: 700px) {
+  .nt-main { padding: 0 2vw;}
+  .nt-bottom-nav { font-size: 0.81rem;}
+}
+
+/* Accessibility and focus */
+.nt-card:focus-within, .nt-card:focus, .nt-nav-btn:focus,
+.nt-upload-btn:focus, .nt-btn-submit:focus, .nt-btn-water:focus,
+.nt-profile-form input:focus, .nt-show-macros:focus, .nt-show-goals:focus
+{
+  outline: 2.5px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: var(--base-dark);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  background-color: var(--base-dark);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-symbol {
+  color: var(--base-light);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hero {
+  padding-top: 120px;
+  padding-bottom: 64px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.subtitle {
+  color: var(--base-light);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+
+.btn {
+  background-color: var(--base-light);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #7691ff;
+}
+
+.btn-large {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+}
